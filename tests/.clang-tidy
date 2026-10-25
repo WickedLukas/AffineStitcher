@@ -1,0 +1,7 @@
+---
+# Catch2 macros trip a few checks that are not useful for test code.
+InheritParentConfig: true
+Checks: >
+  -cppcoreguidelines-avoid-do-while,
+  -readability-function-cognitive-complexity,
+  -bugprone-chained-comparison

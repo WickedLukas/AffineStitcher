@@ -1,0 +1,30 @@
+# Outbound HTTPS allowlist for the dev container (read by init-firewall.sh at container start).
+# GitHub's own IP ranges (github.com, api.github.com, git) are added separately from api.github.com/meta.
+# Changes take effect after "Dev Containers: Rebuild Container" (the file is baked into the image).
+
+# Claude Code: inference, sign-in, updates, docs
+api.anthropic.com
+claude.ai
+claude.com
+platform.claude.com
+downloads.claude.ai
+code.claude.com
+registry.npmjs.org
+
+# GitHub content hosts (vcpkg sources and tools, plugin marketplaces, release notes)
+raw.githubusercontent.com
+objects.githubusercontent.com
+release-assets.githubusercontent.com
+codeload.github.com
+
+# VS Code server and extensions
+marketplace.visualstudio.com
+vscode.blob.core.windows.net
+update.code.visualstudio.com
+
+# Other vcpkg source hosts (eigen3 lives on GitLab)
+gitlab.com
+
+# Documentation (read by Claude via WebFetch)
+en.cppreference.com
+docs.opencv.org

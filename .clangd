@@ -1,0 +1,5 @@
+# Shared by the VS Code clangd extension and Claude Code's clangd-lsp plugin.
+CompileFlags:
+  CompilationDatabase: build/debug
+Diagnostics:
+  UnusedIncludes: Strict
