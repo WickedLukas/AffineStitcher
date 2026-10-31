@@ -15,6 +15,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
         python3 autoconf autoconf-archive automake libtool nasm bison flex \
         iptables ipset iproute2 dnsutils aggregate jq \
         less procps fzf \
+        doxygen graphviz \
     && rm -rf /var/lib/apt/lists/*
 
 # clangd / clang-tidy / clang-format from apt.llvm.org (only the tooling; GCC stays the compiler).
