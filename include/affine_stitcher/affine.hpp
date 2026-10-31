@@ -2,6 +2,7 @@
 
 #include <opencv2/core.hpp>
 
+/// Image stitching with affine transforms. Conventions are in docs/math.md.
 namespace affine_stitcher {
 
 /// Extends a 2x3 affine transform to its 3x3 homogeneous form.

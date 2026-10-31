@@ -45,6 +45,23 @@ target_link_libraries(affine_stitcher_core
 add_executable(affine_stitcher src/main.cpp)
 target_link_libraries(affine_stitcher PRIVATE affine_stitcher_core project_warnings)
 
+# API reference from the /// comments in the public headers, plus the Markdown docs.
+# Not part of ALL; build with `cmake --build --preset debug --target docs`.
+find_package(Doxygen OPTIONAL_COMPONENTS dot)
+if(DOXYGEN_FOUND)
+    set(DOXYGEN_PROJECT_NAME AffineStitcher)
+    set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/docs)
+    set(DOXYGEN_USE_MDFILE_AS_MAINPAGE ${CMAKE_CURRENT_SOURCE_DIR}/README.md)
+    set(DOXYGEN_STRIP_FROM_INC_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include)
+    set(DOXYGEN_GENERATE_LATEX NO)
+    set(DOXYGEN_WARN_IF_UNDOCUMENTED YES)
+    set(DOXYGEN_WARN_AS_ERROR FAIL_ON_WARNINGS)
+    doxygen_add_docs(docs include README.md docs
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "Generating API documentation with Doxygen"
+    )
+endif()
+
 if(AFFINE_STITCHER_BUILD_TESTS)
     enable_testing()
     find_package(Catch2 3 CONFIG REQUIRED)
