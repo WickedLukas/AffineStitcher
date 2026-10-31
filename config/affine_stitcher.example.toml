@@ -1,0 +1,18 @@
+# Example AffineStitcher configuration. Every key is optional; the values shown are the
+# defaults unless noted. Unknown keys are an error, so typos are caught.
+# Use with: affine_stitcher --config config/affine_stitcher.example.toml
+# Command-line options (--log-level, --log-file) override these values.
+
+[log]
+# trace, debug, info, warn, error, critical or off
+level = "info"
+
+# Rotating log file. Relative paths are resolved against this file's directory.
+# Default: none (console only).
+# file = "logs/affine_stitcher.log"
+
+# Rotate when the file reaches this size in bytes (default 5 MiB).
+max_file_size = 5242880
+
+# Rotated files to keep besides the current one.
+max_files = 3

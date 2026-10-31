@@ -6,9 +6,20 @@
     {
       "name": "opencv4",
       "default-features": false,
-      "features": ["calib3d", "eigen", "fs", "intrinsics", "jpeg", "png", "thread"]
+      "features": [
+        "calib3d",
+        "eigen",
+        "fs",
+        "intrinsics",
+        "jpeg",
+        "png",
+        "thread"
+      ]
     },
     "eigen3",
+    "spdlog",
+    "cli11",
+    "tomlplusplus",
     "catch2"
   ],
   "builtin-baseline": "817892b0ecbc6af994dd6df999c73faf795adbf2"

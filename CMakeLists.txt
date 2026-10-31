@@ -23,6 +23,9 @@ option(AFFINE_STITCHER_WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OF
 
 find_package(OpenCV REQUIRED COMPONENTS core imgproc imgcodecs features2d calib3d stitching)
 find_package(Eigen3 CONFIG REQUIRED)
+find_package(spdlog CONFIG REQUIRED)
+find_package(CLI11 CONFIG REQUIRED)
+find_package(tomlplusplus CONFIG REQUIRED)
 
 add_library(project_warnings INTERFACE)
 target_compile_options(project_warnings INTERFACE
@@ -35,15 +38,19 @@ target_compile_options(project_warnings INTERFACE
 
 add_library(affine_stitcher_core
     src/affine.cpp
+    src/cli.cpp
+    src/config.cpp
+    src/logging.cpp
 )
 target_include_directories(affine_stitcher_core PUBLIC include)
 target_link_libraries(affine_stitcher_core
-    PUBLIC ${OpenCV_LIBS} Eigen3::Eigen
-    PRIVATE project_warnings
+    PUBLIC ${OpenCV_LIBS} Eigen3::Eigen spdlog::spdlog CLI11::CLI11
+    PRIVATE tomlplusplus::tomlplusplus project_warnings
 )
 
 add_executable(affine_stitcher src/main.cpp)
 target_link_libraries(affine_stitcher PRIVATE affine_stitcher_core project_warnings)
+target_compile_definitions(affine_stitcher PRIVATE AFFINE_STITCHER_VERSION="${PROJECT_VERSION}")
 
 # API reference from the /// comments in the public headers, plus the Markdown docs.
 # Not part of ALL; build with `cmake --build --preset debug --target docs`.
@@ -67,9 +74,17 @@ if(AFFINE_STITCHER_BUILD_TESTS)
     find_package(Catch2 3 CONFIG REQUIRED)
     include(Catch)
 
-    add_executable(affine_stitcher_tests tests/test_affine.cpp)
+    add_executable(affine_stitcher_tests
+        tests/test_affine.cpp
+        tests/test_cli.cpp
+        tests/test_config.cpp
+        tests/test_logging.cpp
+    )
     target_link_libraries(affine_stitcher_tests
         PRIVATE affine_stitcher_core Catch2::Catch2WithMain project_warnings
+    )
+    target_compile_definitions(affine_stitcher_tests
+        PRIVATE AFFINE_STITCHER_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}"
     )
     catch_discover_tests(affine_stitcher_tests)
 endif()

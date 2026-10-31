@@ -19,7 +19,7 @@ ctest --preset debug -R "compose"                        # run matching tests
 cmake --preset asan && cmake --build --preset asan && ctest --preset asan   # sanitizers
 cmake --preset tidy && cmake --build --preset tidy       # clang-tidy on every file
 cmake --build --preset debug --target docs              # API docs → build/debug/docs/html (fails on undocumented API)
-./build/debug/affine_stitcher
+./build/debug/affine_stitcher -c config/affine_stitcher.example.toml --log-level debug   # --help lists all options
 ```
 
 The first configure builds OpenCV through vcpkg, which takes a while. After that it comes from the binary cache.
@@ -29,12 +29,14 @@ The first configure builds OpenCV through vcpkg, which takes a while. After that
 - `include/affine_stitcher/`: public headers, namespace `affine_stitcher`
 - `src/`: library sources (`affine_stitcher_core`) plus `main.cpp` (`affine_stitcher` executable)
 - `tests/`: Catch2 v3 tests, registered with CTest via `catch_discover_tests`
+- `config/affine_stitcher.example.toml`: documents every config key and its default. A test loads it, so keep it in sync with `Config`.
 - `docs/`: design docs: `architecture.md` (components, pipeline), `math.md` (coordinate and transform conventions), `decisions/` (numbered decision records)
 
 ## Conventions
 
 - snake_case for functions and variables, PascalCase for types, `[[nodiscard]]` on pure functions.
 - Prefer `cv::Matx` for small fixed-size matrices and `cv::Mat` for images.
+- Log through `spdlog::info(...)` etc., never `std::cout`, which is reserved for program output. New settings go in `Config` (`config.hpp`), are validated in `parse_config`, and get an entry in the example config.
 - Every behavior change gets a Catch2 test. Build and run `ctest --preset debug` before saying a change is done.
 - Docs grow with the code, in the same change:
   - Public API gets a `///` Doxygen comment in its header (purpose, and `@param`/`@return`/preconditions where they aren't obvious).

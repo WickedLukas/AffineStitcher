@@ -19,3 +19,4 @@ Template:
 |---|---|
 | [0001](0001-dynamic-linking-via-vcpkg-triplets.md) | Link vcpkg dependencies dynamically |
 | [0002](0002-documentation-doxygen-and-markdown.md) | Doxygen for the API, Markdown for design docs |
+| [0003](0003-logging-config-and-command-line-libraries.md) | spdlog, toml++ and CLI11 for logging, config and command line |
