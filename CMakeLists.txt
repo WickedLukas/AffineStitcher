@@ -1,4 +1,16 @@
 cmake_minimum_required(VERSION 3.25)
+
+# Link vcpkg dependencies (OpenCV etc.) as shared libraries. Must be set before
+# project(), where the vcpkg toolchain runs the manifest install.
+if(NOT DEFINED VCPKG_TARGET_TRIPLET)
+    cmake_host_system_information(RESULT _host_arch QUERY OS_PLATFORM)
+    if(_host_arch MATCHES "^(aarch64|arm64)$")
+        set(VCPKG_TARGET_TRIPLET arm64-linux-dynamic CACHE STRING "vcpkg target triplet")
+    else()
+        set(VCPKG_TARGET_TRIPLET x64-linux-dynamic CACHE STRING "vcpkg target triplet")
+    endif()
+endif()
+
 project(AffineStitcher VERSION 0.1.0 LANGUAGES CXX)
 
 # GCC 12 (Raspberry Pi OS Bookworm) fully supports C++20.
