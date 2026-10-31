@@ -21,12 +21,20 @@
       "WebFetch(domain:en.cppreference.com)",
       "WebFetch(domain:docs.opencv.org)"
     ],
+    "ask": [
+      "Bash(git commit)",
+      "Bash(git commit *)",
+      "Bash(git -C * commit *)"
+    ],
     "deny": [
+      "Bash(git push)",
       "Bash(git push *)",
+      "Bash(git -C * push *)",
       "Bash(sudo *)",
-      "Edit(./.devcontainer/**)",
       "Edit(./.claude/settings.json)",
       "Edit(./.claude/hooks/**)",
+      "Edit(./.devcontainer/**)",
+      "Edit(./.git/**)",
       "Read(./.env)",
       "Read(./.env.*)"
     ]
