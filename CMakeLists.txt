@@ -36,21 +36,23 @@ target_compile_options(project_warnings INTERFACE
     $<$<BOOL:${AFFINE_STITCHER_WARNINGS_AS_ERRORS}>:-Werror>
 )
 
-add_library(affine_stitcher_core
-    src/affine.cpp
-    src/cli.cpp
-    src/config.cpp
-    src/logging.cpp
-)
-target_include_directories(affine_stitcher_core PUBLIC include)
-target_link_libraries(affine_stitcher_core
-    PUBLIC ${OpenCV_LIBS} Eigen3::Eigen spdlog::spdlog CLI11::CLI11
-    PRIVATE tomlplusplus::tomlplusplus project_warnings
-)
+include(GNUInstallDirs)
 
-add_executable(affine_stitcher src/main.cpp)
-target_link_libraries(affine_stitcher PRIVATE affine_stitcher_core project_warnings)
-target_compile_definitions(affine_stitcher PRIVATE AFFINE_STITCHER_VERSION="${PROJECT_VERSION}")
+# All binaries in one place: build/<preset>/bin and build/<preset>/lib.
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
+
+add_subdirectory(lib)
+add_subdirectory(app)
+
+# Bundle the vcpkg shared libraries (OpenCV, spdlog, fmt, ...) with the install, so the install
+# tree runs on a machine that doesn't have them, e.g. the Pi. System libraries (libc,
+# libstdc++, ...) and our own library, which is installed as a target, are left out.
+install(RUNTIME_DEPENDENCY_SET affine_stitcher_runtime_deps
+    POST_INCLUDE_REGEXES "/vcpkg_installed/"
+    POST_EXCLUDE_REGEXES ".*"
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
 
 # API reference from the /// comments in the public headers, plus the Markdown docs.
 # Not part of ALL; build with `cmake --build --preset debug --target docs`.
@@ -59,11 +61,14 @@ if(DOXYGEN_FOUND)
     set(DOXYGEN_PROJECT_NAME AffineStitcher)
     set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/docs)
     set(DOXYGEN_USE_MDFILE_AS_MAINPAGE ${CMAKE_CURRENT_SOURCE_DIR}/README.md)
-    set(DOXYGEN_STRIP_FROM_INC_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include)
+    set(DOXYGEN_STRIP_FROM_INC_PATH ${CMAKE_CURRENT_SOURCE_DIR}/lib/include)
+    set(DOXYGEN_MACRO_EXPANSION YES)
+    set(DOXYGEN_EXPAND_ONLY_PREDEF YES)
+    set(DOXYGEN_PREDEFINED AFFINE_STITCHER_EXPORT=)
     set(DOXYGEN_GENERATE_LATEX NO)
     set(DOXYGEN_WARN_IF_UNDOCUMENTED YES)
     set(DOXYGEN_WARN_AS_ERROR FAIL_ON_WARNINGS)
-    doxygen_add_docs(docs include README.md docs
+    doxygen_add_docs(docs lib/include README.md docs
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         COMMENT "Generating API documentation with Doxygen"
     )
@@ -71,20 +76,5 @@ endif()
 
 if(AFFINE_STITCHER_BUILD_TESTS)
     enable_testing()
-    find_package(Catch2 3 CONFIG REQUIRED)
-    include(Catch)
-
-    add_executable(affine_stitcher_tests
-        tests/test_affine.cpp
-        tests/test_cli.cpp
-        tests/test_config.cpp
-        tests/test_logging.cpp
-    )
-    target_link_libraries(affine_stitcher_tests
-        PRIVATE affine_stitcher_core Catch2::Catch2WithMain project_warnings
-    )
-    target_compile_definitions(affine_stitcher_tests
-        PRIVATE AFFINE_STITCHER_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}"
-    )
-    catch_discover_tests(affine_stitcher_tests)
+    add_subdirectory(tests)
 endif()

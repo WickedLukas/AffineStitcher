@@ -16,3 +16,10 @@ max_file_size = 5242880
 
 # Rotated files to keep besides the current one.
 max_files = 3
+
+[stitcher]
+# Maximum number of features detected per image.
+max_features = 2000
+
+# Maximum reprojection error in pixels for a match to count as a RANSAC inlier.
+ransac_threshold = 3.0

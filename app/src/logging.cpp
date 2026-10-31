@@ -1,4 +1,4 @@
-#include "affine_stitcher/logging.hpp"
+#include "logging.hpp"
 
 #include <memory>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <vector>
 
-namespace affine_stitcher {
+namespace affine_stitcher::app {
 
 void setup_logging(const LogConfig& config) {
     if (!is_valid_log_level(config.level)) {
@@ -26,4 +26,4 @@ void setup_logging(const LogConfig& config) {
     spdlog::set_default_logger(std::move(logger));
 }
 
-} // namespace affine_stitcher
+} // namespace affine_stitcher::app

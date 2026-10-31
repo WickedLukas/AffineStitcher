@@ -1,11 +1,11 @@
-#include "affine_stitcher/cli.hpp"
+#include "cli.hpp"
 #include "temp_dir.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 
-using affine_stitcher::add_options;
-using affine_stitcher::CommandLineOptions;
-using affine_stitcher::resolve_config;
+using affine_stitcher::app::add_options;
+using affine_stitcher::app::CommandLineOptions;
+using affine_stitcher::app::resolve_config;
 
 namespace {
 

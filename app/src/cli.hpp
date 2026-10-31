@@ -1,13 +1,13 @@
 #pragma once
 
-#include "affine_stitcher/config.hpp"
+#include "config.hpp"
 
 #include <CLI/CLI.hpp>
 #include <filesystem>
 #include <optional>
 #include <string>
 
-namespace affine_stitcher {
+namespace affine_stitcher::app {
 
 /// Values given on the command line. Unset options leave the config file value in place.
 struct CommandLineOptions {
@@ -28,4 +28,4 @@ void add_options(CLI::App& app, CommandLineOptions& options);
 /// @throws ConfigError if the config file can't be loaded
 [[nodiscard]] Config resolve_config(const CommandLineOptions& options);
 
-} // namespace affine_stitcher
+} // namespace affine_stitcher::app

@@ -1,8 +1,8 @@
-#include "affine_stitcher/cli.hpp"
+#include "cli.hpp"
 
 #include <vector>
 
-namespace affine_stitcher {
+namespace affine_stitcher::app {
 
 void add_options(CLI::App& app, CommandLineOptions& options) {
     app.add_option("-c,--config", options.config_file, "TOML config file")
@@ -24,4 +24,4 @@ Config resolve_config(const CommandLineOptions& options) {
     return config;
 }
 
-} // namespace affine_stitcher
+} // namespace affine_stitcher::app

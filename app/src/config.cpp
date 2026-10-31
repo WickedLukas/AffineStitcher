@@ -1,13 +1,13 @@
-#include "affine_stitcher/config.hpp"
+#include "config.hpp"
 
 #include <algorithm>
 #include <array>
-#include <cstdint>
 #include <fstream>
+#include <limits>
 #include <sstream>
 #include <toml++/toml.hpp>
 
-namespace affine_stitcher {
+namespace affine_stitcher::app {
 
 namespace {
 
@@ -59,6 +59,31 @@ void read_log(const toml::table& table, LogConfig& log, std::string_view source)
     }
 }
 
+void read_stitcher(const toml::table& table, StitcherOptions& options, std::string_view source) {
+    for (const auto& [key, node] : table) {
+        const std::string_view name = key.str();
+        // The setters validate the values; their message is reported with the line.
+        try {
+            if (name == "max_features") {
+                const auto* value = node.as_integer();
+                if (value == nullptr || value->get() > std::numeric_limits<int>::max()) {
+                    fail(source, node.source(), "'stitcher.max_features' must be an integer");
+                }
+                options.set_max_features(static_cast<int>(value->get()));
+            } else if (name == "ransac_threshold") {
+                if (!node.is_floating_point() && !node.is_integer()) {
+                    fail(source, node.source(), "'stitcher.ransac_threshold' must be a number");
+                }
+                options.set_ransac_threshold(node.value<double>().value_or(0.0));
+            } else {
+                fail(source, key.source(), "unknown key 'stitcher." + std::string{name} + "'");
+            }
+        } catch (const std::invalid_argument& error) {
+            fail(source, node.source(), "'stitcher." + std::string{name} + "': " + error.what());
+        }
+    }
+}
+
 } // namespace
 
 bool is_valid_log_level(std::string_view level) {
@@ -83,6 +108,12 @@ Config parse_config(std::string_view toml_text, std::string_view source_name) {
                 fail(source_name, node.source(), "'log' must be a table");
             }
             read_log(*table, config.log, source_name);
+        } else if (key.str() == "stitcher") {
+            const auto* table = node.as_table();
+            if (table == nullptr) {
+                fail(source_name, node.source(), "'stitcher' must be a table");
+            }
+            read_stitcher(*table, config.stitcher, source_name);
         } else {
             fail(source_name, key.source(), "unknown key '" + std::string{key.str()} + "'");
         }
@@ -106,4 +137,4 @@ Config load_config(const std::filesystem::path& path) {
     return config;
 }
 
-} // namespace affine_stitcher
+} // namespace affine_stitcher::app

@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -44,6 +45,9 @@ class TempDir {
 
 /// Returns the whole content of a text file.
 inline std::string read_file(const std::filesystem::path& path) {
-    std::ifstream file{path};
-    return {std::istreambuf_iterator<char>{file}, std::istreambuf_iterator<char>{}};
+    // Not via istreambuf_iterator: GCC 12 reports a false -Wnull-dereference for it at -O2.
+    const std::ifstream file{path};
+    std::ostringstream content;
+    content << file.rdbuf();
+    return content.str();
 }

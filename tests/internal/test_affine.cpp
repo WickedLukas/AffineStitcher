@@ -1,10 +1,10 @@
-#include "affine_stitcher/affine.hpp"
+#include "affine.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 
-using affine_stitcher::compose;
-using affine_stitcher::to_homogeneous;
+using affine_stitcher::detail::compose;
+using affine_stitcher::detail::to_homogeneous;
 using Catch::Matchers::WithinAbs;
 
 namespace {

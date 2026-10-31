@@ -1,12 +1,14 @@
 #pragma once
 
+#include <affine_stitcher/stitcher_options.hpp>
+
 #include <cstddef>
 #include <filesystem>
 #include <stdexcept>
 #include <string>
 #include <string_view>
 
-namespace affine_stitcher {
+namespace affine_stitcher::app {
 
 /// Logging settings, read from the `[log]` table of the config file.
 struct LogConfig {
@@ -24,6 +26,8 @@ struct LogConfig {
 struct Config {
     /// Settings from the `[log]` table.
     LogConfig log;
+    /// Settings from the `[stitcher]` table, passed on to the library.
+    StitcherOptions stitcher;
 };
 
 /// Thrown when a config file can't be read, isn't valid TOML, or contains unknown keys or
@@ -47,4 +51,4 @@ class ConfigError : public std::runtime_error {
 /// @throws ConfigError if the file can't be read or its contents are invalid
 [[nodiscard]] Config load_config(const std::filesystem::path& path);
 
-} // namespace affine_stitcher
+} // namespace affine_stitcher::app

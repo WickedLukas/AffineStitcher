@@ -1,8 +1,8 @@
 #pragma once
 
-#include "affine_stitcher/config.hpp"
+#include "config.hpp"
 
-namespace affine_stitcher {
+namespace affine_stitcher::app {
 
 /// Installs the default spdlog logger, which the `spdlog::info(...)` etc. functions write to.
 /// It logs to stderr and, if LogConfig::file is set, also to a rotating log file. Warnings
@@ -11,4 +11,4 @@ namespace affine_stitcher {
 /// @throws spdlog::spdlog_ex if the log file can't be opened
 void setup_logging(const LogConfig& config);
 
-} // namespace affine_stitcher
+} // namespace affine_stitcher::app

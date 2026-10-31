@@ -1,0 +1,8 @@
+@PACKAGE_INIT@
+
+# OpenCV types appear in the public headers, so consumers need OpenCV as well.
+include(CMakeFindDependencyMacro)
+find_dependency(OpenCV REQUIRED COMPONENTS @OpenCV_FIND_COMPONENTS@)
+
+include("${CMAKE_CURRENT_LIST_DIR}/AffineStitcherTargets.cmake")
+check_required_components(AffineStitcher)

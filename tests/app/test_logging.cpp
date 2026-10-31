@@ -1,4 +1,4 @@
-#include "affine_stitcher/logging.hpp"
+#include "logging.hpp"
 #include "temp_dir.hpp"
 
 #include <catch2/catch_test_macros.hpp>
@@ -7,8 +7,8 @@
 #include <spdlog/spdlog.h>
 #include <stdexcept>
 
-using affine_stitcher::LogConfig;
-using affine_stitcher::setup_logging;
+using affine_stitcher::app::LogConfig;
+using affine_stitcher::app::setup_logging;
 using Catch::Matchers::ContainsSubstring;
 
 TEST_CASE("setup_logging writes messages at or above the level to the log file") {

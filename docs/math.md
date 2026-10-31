@@ -1,6 +1,6 @@
 # Math conventions
 
-These conventions hold across the whole library. Code in `include/affine_stitcher/` must follow them, and any change to them needs a decision record in [decisions/](decisions/).
+These conventions hold across the whole library. Code in `lib/` must follow them, and any change to them needs a decision record in [decisions/](decisions/).
 
 ## Coordinates
 
@@ -52,4 +52,4 @@ The arguments are written in the same order as the matrix product, not the order
 | `compose(scale, shift)` | `[2 0 20; 0 2 10]` | shift first, then scale, so the translation is scaled too |
 | `compose(shift, scale)` | `[2 0 10; 0 2 5]` | scale first, then shift, so the translation stays as it is |
 
-Both cases are covered in `tests/test_affine.cpp`.
+Both cases are covered in `tests/internal/test_affine.cpp`. `compose` and `to_homogeneous` are internal (`lib/src/affine.hpp`, namespace `affine_stitcher::detail`).
